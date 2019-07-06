@@ -1,0 +1,18 @@
+
+.error {
+    color: red;
+    }
+.blog_list {
+    color: red;
+    border-color: black;
+    border-width: 5px;
+}
+.blog_box {
+    border-color: purple;
+    border-width: 10px;
+}
+body {
+    background-color: aqua
+}
+
+
