@@ -5,17 +5,18 @@
     <form method='POST' action='/blog'>
         <label>
             Blog title:
-            <input type='text' name='name'>
+            <input type='text' name='name' {% if name %} value='{{name}}' {% endif %} >
         </label>
         <label>
             Blog content:
-            <textarea type='text' name='content'>
-
-            </textarea>
+            <textarea type='text' name='content' >{% if content %}{{content}}{% endif %}</textarea>
         </label>
         <input type='submit' value='Add this blog' action='/blog'>
     </form>
+    {% if unfilled %}
+    <p class='error'>Please enter text in all fields before submission!
+    </p>
+    {% endif %}
 </div>
-
 
 {% endblock %}

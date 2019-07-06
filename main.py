@@ -8,6 +8,9 @@ app.config['SQLALCHEMY_ECHO'] = True
 
 db = SQLAlchemy(app)
 
+name = ''
+content = ''
+
 class Blog(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(120))
@@ -25,9 +28,13 @@ def index():
 
 @app.route('/blog', methods=['GET', 'POST'])
 def blog():
+    global name
+    global content
     if request.method == 'POST':
         name = request.form['name']
         content = request.form['content']
+        if name == '' or content == '':
+            return redirect('/newpost?unfilled=yes')
         new_blog = Blog(name, content)
         db.session.add(new_blog)
         db.session.commit()
@@ -43,8 +50,16 @@ def blog():
 
 @app.route('/newpost', methods=['GET', 'POST'])
 def newblog():
-    return render_template('blog-add.html')
-
+    global name
+    global content
+    unfilled = request.args.get('unfilled')
+    name = name
+    content = content
+    if unfilled != 'yes':
+        name = ''
+        content = ''
+    return render_template('blog-add.html', unfilled=unfilled, content=content, name=name)
+    
 
 if __name__ == '__main__':
     app.run()
