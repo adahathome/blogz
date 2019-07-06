@@ -19,7 +19,7 @@ class Blog(db.Model):
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
-    blogs = blog.query.all()
+    blogs = Blog.query.all()
 
     return render_template('home.html', blogs = blogs)
 
@@ -39,6 +39,9 @@ def blog():
     return render_template('blog-page.html', blog=blog)
 
 @app.route('/newpost', methods=['GET', 'POST'])
+def newblog():
+    return render_template('blog-add.html')
+
 
 if __name__ == '__main__':
     app.run()

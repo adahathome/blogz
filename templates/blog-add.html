@@ -2,10 +2,10 @@
 {% block content %}
 <h1>New Blog Entry!</h1>
 <div>
-    <form method='POST'>
+    <form method='POST' action='/blog'>
         <label>
             Blog title:
-            <input type='text' name='title'>
+            <input type='text' name='name'>
         </label>
         <label>
             Blog content:
@@ -13,7 +13,7 @@
 
             </textarea>
         </label>
-        <input type='submit' value='Add this blog'>
+        <input type='submit' value='Add this blog' action='/blog'>
     </form>
 </div>
 
