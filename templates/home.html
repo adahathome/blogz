@@ -4,10 +4,7 @@
 <div>
     {% for blog in blogs %}
     <div>
-        <h2><form method='GET' action='/blog'>
-            <input type='hidden' name='blog-id' value='{{blog.id}}' />
-            {{blog.name}}
-        </form></h2>
+        <h2><a href='./blog?id={{blog.id}}'>{{blog.name}}</a></h2>
         <p>{{blog.content}}</p>
     </div>
     {% endfor %}

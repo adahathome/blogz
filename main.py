@@ -32,8 +32,11 @@ def blog():
         db.session.add(new_blog)
         db.session.commit()
         blog_id = new_blog.id
+    elif request.args.get('id'):
+        blog_id = request.args.get('id')
     else:
-        blog_id = request.args.get('blog-id')
+        blogs = Blog.query.all()
+        return render_template('home.html', blogs = blogs)
     blog = Blog.query.get(blog_id)
 
     return render_template('blog-page.html', blog=blog)
