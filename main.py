@@ -38,7 +38,8 @@ def blog():
         new_blog = Blog(name, content)
         db.session.add(new_blog)
         db.session.commit()
-        blog_id = new_blog.id
+        blog_id = str(new_blog.id)
+        return redirect('/blog?id='+blog_id)
     elif request.args.get('id'):
         blog_id = request.args.get('id')
     else:
