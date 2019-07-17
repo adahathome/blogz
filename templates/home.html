@@ -1,14 +1,13 @@
 {% extends "base.html" %}    
 {% block content %}
-<h1>Here are all the blogs</h1>
+<h1>Here is the index of the blogs</h1>
 <div class='blog_box'>
     {% for blog in blogs %}
     <div class='blog_list'>
         <h2><a href='./blog?id={{blog.id}}'>{{blog.name}}</a></h2>
         <p>{{blog.content}}</p>
+        <p>by <a href='./blog?user={{blog.user_id}}'>{{blog.user_id}}</a> </p>
     </div>
     {% endfor %}
 </div>
-
-
 {% endblock %}

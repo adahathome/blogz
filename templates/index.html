@@ -1,13 +1,10 @@
 {% extends "base.html" %}    
 {% block content %}
-<h1>Here is the index of the blogs</h1>
-<div class='blog_box'>
-    {% for blog in blogs %}
-    <div class='blog_list'>
-        <h2><a href='./blog?id={{blog.id}}'>{{blog.name}}</a></h2>
-        <p>{{blog.content}}</p>
-        <p>by <a href='./blog?user={{blog.user_id}}'>{{blog.user_id}}</a> </p>
-    </div>
+<h1>Here is a list of bloggers</h1>
+<ul>
+    {% for user in users %}
+    <li class='blog_list'>
+        <a href='./blog?user_id={{user.id}}'>{{user.email}}</a>
     {% endfor %}
-</div>
+</ul>
 {% endblock %}

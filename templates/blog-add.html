@@ -11,6 +11,7 @@
             Blog content:
             <textarea type='text' name='content' >{% if content %}{{content}}{% endif %}</textarea>
         </label>
+        <input type='hidden' name='creator_id' value='{{poster}}'>
         <input type='submit' value='Add this blog' action='/blog'>
     </form>
     {% if unfilled %}

@@ -30,10 +30,10 @@ class Blog(db.Model):
     content = db.Column(db.String(2000))
     user_id = db.Column(db.Integer, db.ForeignKey(User.id))
 
-    def __init__(self, name, content, user):
+    def __init__(self, name, content, user_id):
         self.name = name
         self.content = content
-        self.user = user
+        self.user_id = user_id
 
 @app.before_request
 def require_login():
@@ -44,9 +44,9 @@ def require_login():
 
 @app.route('/', methods=['GET', 'POST'])
 def landing():
-    blogs = Blog.query.all()
+    users = User.query.all()
 
-    return render_template('home.html', blogs = blogs)
+    return render_template('index.html', users = users)
 
 @app.route('/signup', methods=['GET', 'POST'])
 def signup():
@@ -65,7 +65,7 @@ def signup():
             db.session.add(new_user)
             db.session.commit()
             session['email'] = new_user.email
-            redirect('/newpost')
+            return redirect('/newpost')
         return render_template('signup.html')
     else:
         return render_template('signup.html')
@@ -89,7 +89,8 @@ def login():
 
 @app.route('/index', methods=['GET', 'POST'])
 def index():
-    return render_template('index.html')
+    blogs = Blog.query.all()
+    return render_template('home.html', blogs = blogs)
 
 @app.route('/blog', methods=['GET', 'POST'])
 def blog():
@@ -98,21 +99,26 @@ def blog():
     if request.method == 'POST':
         name = request.form['name']
         content = request.form['content']
+        user = request.form['creator_id']
         if name == '' or content == '':
             return redirect('/newpost?unfilled=yes')
-        new_blog = Blog(name, content)
+        new_blog = Blog(name, content, user)
         db.session.add(new_blog)
         db.session.commit()
         blog_id = str(new_blog.id)
         return redirect('/blog?id='+blog_id)
     elif request.args.get('id'):
         blog_id = request.args.get('id')
+        blog = Blog.query.get(blog_id)
+        return render_template('blog-page.html', blog=blog)
+    elif request.args.get('user_id'):
+        user_id = request.args.get('user_id')
+        blogs = Blog.query.filter_by(user_id=user_id).all()
+        return render_template('singleUser.html', blogs=blogs)
     else:
         blogs = Blog.query.all()
-        return render_template('home.html', blogs = blogs)
-    blog = Blog.query.get(blog_id)
+    return render_template('home.html', blogs = blogs)
 
-    return render_template('blog-page.html', blog=blog)
 
 @app.route('/newpost', methods=['GET', 'POST'])
 def newpost():
@@ -121,11 +127,13 @@ def newpost():
     unfilled = request.args.get('unfilled')
     name = name
     content = content
-    user_id = session['email']
+    user_email = session['email']
+    creator = User.query.filter_by(email=user_email).first()
+    poster = creator.id
     if unfilled != 'yes':
         name = ''
         content = ''
-    return render_template('blog-add.html', unfilled=unfilled, content=content, name=name)
+    return render_template('blog-add.html', unfilled=unfilled, content=content, name=name, poster=poster)
 
 @app.route('/logout', methods=['POST'])
 def logout():
