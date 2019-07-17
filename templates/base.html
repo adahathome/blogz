@@ -4,8 +4,32 @@
         <link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='styles/styles.css') }}">
     </head>
     <header>
-        <a class="blog_box" href="/blog">Blogs Home Page</a>
-        <a href="/newpost">Add a Blog</a>
+        <table style='width: 100%; text-align: center;'>
+            <tr>
+                <td><a class="blog_box" href="/index">Index</a></td>
+                <td><a href="/newpost">Add a Blog</a></td>
+            </tr>
+            <tr>
+                <td>
+                    {% if session['email'] %}
+                    You are logged in as {{session.email}}
+                    <form action='/logout' method='POST'>
+                        <input type='submit' value='logout'>
+                    </form>
+                    {% endif %}
+                </td>
+            </tr>
+        </table>
+        {% with messages = get_flashed_messages() %}
+            {% if messages %}
+                <ul class=flashes>
+                {% for message in messages %}
+                    <li>{{ message }}</li>
+                {% endfor %}
+                </ul>
+            {% endif %}
+        {% endwith %}
+        
     </header>
     <body>
       {% block content %}

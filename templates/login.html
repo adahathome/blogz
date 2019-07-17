@@ -1,0 +1,17 @@
+{% extends "base.html" %}    
+{% block content %}
+<form action='/login' method='post'>
+    <label for='user-email'>
+        User Name (email):
+        <input id='user-email' type='text' name='user_email' value={{user_name}} >
+    </label>
+    <label for='password'>
+        Password:
+        <input id='password' type='password' name='password' />
+    </label>
+    <input type="submit" />
+</form>
+<div>
+    <h3>Not yet a member? Signup <a href="/signup">here!</a></h3>
+</div>
+{% endblock %}
