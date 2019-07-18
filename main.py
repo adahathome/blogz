@@ -18,7 +18,7 @@ class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     email = db.Column(db.String(120), unique=True)
     password = db.Column(db.String(20))
-    blogs = db.relationship('Blog', backref='user')
+    blogs = db.relationship('Blog', back_populates='user')
 
     def __init__(self, email, password):
         self.email = email
@@ -28,7 +28,8 @@ class Blog(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(120))
     content = db.Column(db.String(2000))
-    user_id = db.Column(db.Integer, db.ForeignKey(User.id))
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    user = db.relationship('User', back_populates='blogs')
 
     def __init__(self, name, content, user_id):
         self.name = name
@@ -90,7 +91,8 @@ def login():
 @app.route('/index', methods=['GET', 'POST'])
 def index():
     blogs = Blog.query.all()
-    return render_template('home.html', blogs = blogs)
+    users = User.query.all()
+    return render_template('home.html', blogs = blogs, users = users)
 
 @app.route('/blog', methods=['GET', 'POST'])
 def blog():
@@ -111,10 +113,11 @@ def blog():
         blog_id = request.args.get('id')
         blog = Blog.query.get(blog_id)
         return render_template('blog-page.html', blog=blog)
-    elif request.args.get('user_id'):
-        user_id = request.args.get('user_id')
-        blogs = Blog.query.filter_by(user_id=user_id).all()
-        return render_template('singleUser.html', blogs=blogs)
+    elif request.args.get('user'):
+        user = request.args.get('user')
+        blogs = Blog.query.filter_by(user_id=user).all()
+        blogger = User.query.filter_by(id=user).first()
+        return render_template('singleUser.html', blogs=blogs, name=blogger)
     else:
         blogs = Blog.query.all()
     return render_template('home.html', blogs = blogs)
