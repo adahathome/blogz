@@ -52,21 +52,24 @@ def landing():
 @app.route('/signup', methods=['GET', 'POST'])
 def signup():
     if request.method == 'POST':
+        valid_email = False
         pword = request.form['password']
         pword_match = request.form['pass_match']
         email = request.form['user_email']
+        if ('@' in email) and ('.'in email):
+            valid_email = True
+        else:
+            flash('Please enter a valid email')
         if len(pword) < 3 or len(pword)>20:
             flash('Password must be between three and twenty characters')
-        if pword != pword_match:
-            flash('Passwords do not match')
-        if email == "" or (('@' not in email) and ('.' not in email)):
-            flash('Please enter a valid email')
-        else:
+        elif pword == pword_match and valid_email == True:
             new_user = User(email, pword)
             db.session.add(new_user)
             db.session.commit()
             session['email'] = new_user.email
             return redirect('/newpost')
+        else:
+            flash('Passwords do not match')
         return render_template('signup.html')
     else:
         return render_template('signup.html')
